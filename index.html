@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Pausa Caffè ☕</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  :root {
+    --bg: #f7f4f0; --card: #ffffff; --accent: #2563eb;
+    --text: #1a1a1a; --muted: #888; --cup: #d97706;
+    --radius: 18px; --shadow: 0 4px 24px rgba(0,0,0,0.07);
+  }
+  html, body { height: 100%; overflow: hidden; font-family: 'Georgia', serif; background: var(--bg); color: var(--text); }
+  .screen { display: none; position: fixed; inset: 0; flex-direction: column; align-items: center; justify-content: center; padding: 24px 20px; gap: 0; }
+  .screen.active { display: flex; }
+
+  /* HOME */
+  #home { background: var(--bg); gap: 10px; }
+  .logo-area { text-align: center; margin-bottom: 2px; }
+  .logo-icon { font-size: 48px; display: block; margin-bottom: 6px; animation: bob 3s ease-in-out infinite; }
+  @keyframes bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+  h1 { font-size: 26px; font-weight: normal; letter-spacing: -0.5px; line-height: 1.2; }
+
+  .slogan-banner {
+    width: 100%; max-width: 320px;
+    background: var(--accent);
+    border-radius: 16px;
+    padding: 16px 20px;
+    text-align: center;
+    margin: 4px 0 8px;
+    box-shadow: 0 4px 20px rgba(37,99,235,0.3);
+  }
+  .slogan-text { font-size: 18px; font-weight: bold; color: white; font-family: system-ui, sans-serif; line-height: 1.35; }
+  .slogan-sub  { font-size: 11px; color: rgba(255,255,255,0.65); font-family: system-ui, sans-serif; margin-top: 5px; letter-spacing: 0.8px; text-transform: uppercase; }
+
+  .choice-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted); font-family: system-ui, sans-serif; font-weight: 600; }
+  .choice-row { display: flex; gap: 12px; width: 100%; max-width: 320px; }
+  .choice-btn { flex: 1; background: var(--card); border: 2px solid transparent; border-radius: var(--radius); padding: 14px 8px; text-align: center; cursor: pointer; transition: all 0.2s; box-shadow: var(--shadow); }
+  .choice-btn .choice-icon { font-size: 28px; display: block; margin-bottom: 5px; }
+  .choice-btn .choice-name { font-size: 11px; color: var(--muted); font-family: system-ui, sans-serif; font-weight: 600; }
+  .choice-btn.sel-cup   { border-color: var(--cup); background: #fef9ec; }
+  .choice-btn.sel-cup .choice-name   { color: var(--cup); }
+  .choice-btn.sel-glass { border-color: #9ca3af; background: #f9fafb; }
+  .choice-btn.sel-glass .choice-name { color: #6b7280; }
+  .choice-btn:active { transform: scale(0.96); }
+
+  .play-btn { width: 100%; max-width: 320px; padding: 17px; font-size: 18px; font-family: 'Georgia', serif; background: var(--accent); color: white; border: none; border-radius: var(--radius); cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 16px rgba(37,99,235,0.35); }
+  .play-btn:active { transform: scale(0.97); }
+  .lb-link { font-size: 13px; color: var(--accent); font-family: system-ui, sans-serif; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+  .shake { animation: shake 0.4s ease; }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)} 40%{transform:translateX(8px)} 60%{transform:translateX(-5px)} 80%{transform:translateX(5px)} }
+
+  /* GAME */
+  #game { padding: 0; }
+  #reaction-box { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; user-select: none; transition: background 0.12s ease; background: #1e1e1e; gap: 20px; }
+  .r-hint { font-size: 15px; color: rgba(255,255,255,0.55); font-family: system-ui, sans-serif; letter-spacing: 0.5px; }
+  .r-main { font-size: 72px; color: white; line-height: 1; }
+  .r-sub  { font-size: 14px; color: rgba(255,255,255,0.4); font-family: system-ui, sans-serif; text-align: center; padding: 0 40px; line-height: 1.5; }
+
+  /* RESULT */
+  #result { background: var(--bg); gap: 14px; }
+  .result-score { font-size: 78px; font-weight: normal; color: var(--accent); line-height: 1; letter-spacing: -2px; }
+  .result-unit  { font-size: 17px; color: var(--muted); font-family: system-ui, sans-serif; margin-top: -4px; }
+  .result-phrase { font-size: 16px; color: var(--text); text-align: center; line-height: 1.6; font-family: system-ui, sans-serif; max-width: 290px; background: white; padding: 16px 20px; border-radius: 14px; box-shadow: var(--shadow); }
+  .name-input { width: 100%; max-width: 300px; padding: 14px 18px; font-size: 16px; font-family: system-ui, sans-serif; border: 2px solid #e0e0e0; border-radius: var(--radius); background: var(--card); color: var(--text); outline: none; transition: border-color 0.2s; text-align: center; }
+  .name-input:focus { border-color: var(--accent); }
+  .name-input::placeholder { color: #bbb; }
+  .save-btn { width: 100%; max-width: 300px; padding: 16px; font-size: 16px; font-family: system-ui, sans-serif; font-weight: 600; background: var(--text); color: white; border: none; border-radius: var(--radius); cursor: pointer; transition: all 0.2s; }
+  .save-btn:active { transform: scale(0.97); }
+  .replay-sm { font-size: 14px; color: var(--accent); font-family: system-ui, sans-serif; background: none; border: none; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; padding: 4px; }
+
+  /* LEADERBOARD */
+  #leaderboard { background: var(--bg); justify-content: flex-start; padding-top: 40px; overflow-y: auto; gap: 0; }
+  #lb-inner { width: 100%; max-width: 360px; display: flex; flex-direction: column; gap: 12px; padding-bottom: 30px; }
+  .lb-header { text-align: center; margin-bottom: 8px; }
+  .lb-title  { font-size: 22px; font-weight: normal; }
+  .lb-sub    { font-size: 13px; color: var(--muted); font-family: system-ui, sans-serif; margin-top: 4px; }
+  .lb-row { display: flex; align-items: center; gap: 14px; background: var(--card); border-radius: 14px; padding: 14px 16px; box-shadow: var(--shadow); }
+  .lb-rank  { font-size: 20px; width: 28px; text-align: center; flex-shrink: 0; }
+  .lb-name  { flex: 1; font-size: 16px; font-family: system-ui, sans-serif; font-weight: 500; }
+  .lb-ico   { font-size: 18px; }
+  .lb-time  { font-size: 16px; font-family: 'Georgia', serif; color: var(--accent); }
+  .lb-empty { text-align: center; color: var(--muted); font-family: system-ui, sans-serif; font-size: 14px; padding: 30px 0; }
+  .lb-play  { width: 100%; padding: 16px; font-size: 16px; font-family: system-ui, sans-serif; font-weight: 600; background: var(--accent); color: white; border: none; border-radius: var(--radius); cursor: pointer; margin-top: 8px; box-shadow: 0 4px 16px rgba(37,99,235,0.3); }
+  .lb-clr   { font-size: 12px; color: #bbb; font-family: system-ui, sans-serif; background: none; border: none; cursor: pointer; text-decoration: underline; text-align: center; margin-top: -4px; }
+
+  /* TOO EARLY */
+  .too-early { position: fixed; inset: 0; background: rgba(220,38,38,0.92); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; animation: fi 0.1s ease; }
+  @keyframes fi { from{opacity:0} to{opacity:1} }
+  .te-icon { font-size: 56px; }
+  .te-text { font-size: 22px; color: white; font-family: system-ui, sans-serif; font-weight: 600; }
+  .te-sub  { font-size: 14px; color: rgba(255,255,255,0.75); font-family: system-ui, sans-serif; }
+</style>
+</head>
+<body>
+
+<!-- HOME -->
+<div id="home" class="screen active">
+  <div class="logo-area">
+    <span class="logo-icon">☕</span>
+    <h1>Pausa Caffè</h1>
+  </div>
+
+  <div class="slogan-banner">
+    <div class="slogan-text">Usa quello che vuoi.<br>Riutilizzabile è meglio!</div>
+    <div class="slogan-sub">Piccolo gesto, grande differenza 🌍</div>
+  </div>
+
+  <p class="choice-label">Cosa stai usando?</p>
+
+  <div class="choice-row">
+    <button class="choice-btn" id="btn-cup" onclick="selectChoice('cup')">
+      <span class="choice-icon">☕</span>
+      <span class="choice-name">Tazza</span>
+    </button>
+    <button class="choice-btn" id="btn-glass" onclick="selectChoice('glass')">
+      <span class="choice-icon">📄🗑️</span>
+      <span class="choice-name">Bicchiere di carta</span>
+    </button>
+  </div>
+
+  <button class="play-btn" onclick="startGame()">Gioca ▶</button>
+  <span class="lb-link" onclick="showLeaderboard()">🏆 Classifica</span>
+</div>
+
+<!-- GAME -->
+<div id="game" class="screen">
+  <div id="reaction-box" onclick="handleTap()">
+    <span class="r-hint" id="r-hint">Preparati...</span>
+    <span class="r-main" id="r-main">⚫</span>
+    <span class="r-sub"  id="r-sub">Tocca quando cambia colore</span>
+  </div>
+</div>
+
+<!-- RESULT -->
+<div id="result" class="screen">
+  <div class="result-score" id="score-display">---</div>
+  <div class="result-unit">millisecondi</div>
+  <p class="result-phrase" id="result-phrase">—</p>
+  <input class="name-input" id="name-input" type="text" placeholder="Il tuo nome" maxlength="20" autocomplete="off" autocorrect="off" spellcheck="false">
+  <button class="save-btn" onclick="saveScore()">💾 Salva punteggio</button>
+  <button class="replay-sm" onclick="replay()">Rigioca</button>
+</div>
+
+<!-- LEADERBOARD -->
+<div id="leaderboard" class="screen">
+  <div id="lb-inner">
+    <div class="lb-header">
+      <div class="lb-title">🏆 Top della pausa</div>
+      <div class="lb-sub">I più veloci dell'ufficio</div>
+    </div>
+    <div id="lb-list"></div>
+    <button class="lb-play" onclick="goHome()">☕ Torna all'inizio</button>
+    <button class="lb-clr"  onclick="clearScores()">Cancella classifica</button>
+  </div>
+</div>
+
+<script>
+  let currentChoice = null;
+  let gameState = 'idle';
+  let startTime = null;
+  let waitTimeout = null;
+  let currentMs = null;
+  let goColor = null;
+
+  const goColors = [
+    { bg: '#16a34a', emoji: '🟢' },
+    { bg: '#7c3aed', emoji: '🟣' },
+    { bg: '#ea580c', emoji: '🟠' },
+    { bg: '#0891b2', emoji: '🔵' },
+    { bg: '#ca8a04', emoji: '🟡' },
+    { bg: '#db2777', emoji: '🩷' },
+    { bg: '#0f766e', emoji: '🩵' },
+  ];
+
+  const phrases = {
+    cup: {
+      fast: [
+        "Riflessi da barista campione e tazza in mano. Il pianeta ti dà 10! 🌍",
+        "Veloce come il caffè nel sangue. E senza sprechi. Doppia vittoria. ☕",
+        "Tazza riutilizzabile + riflessi fulminei = persona eccezionale. Confermato.",
+        "Il segnale è cambiato, tu hai tappato, la Terra ha sorriso. Tutto bene.",
+        "Con questi riflessi potresti fare il guardiano della macchinetta del caffè.",
+      ],
+      mid: [
+        "Tempi onesti. La tazza già ti mette avanti a metà ufficio, però.",
+        "Nella media della velocità, ma fuori dalla media dell'impatto ambientale. Bene così.",
+        "Non sei il più veloce, ma sei quello con la coscienza più pulita. ☕",
+        "Potevi fare meglio, ma con la tazza stai già vincendo la partita vera.",
+        "Riflessi da seconda tazzina. Ma la tazza è giusta.",
+      ],
+      slow: [
+        "Lento come il lunedì. Ma la tazza la riusi domani. Priorità giuste.",
+        "Il caffè non ha ancora fatto effetto, evidentemente.",
+        "Forse è stata la terza tazzina. Succede a tutti.",
+        "I riflessi migliorano col tempo. La tazza, però, è già perfetta. ☕",
+        "Hai impiegato più tempo del caffè a raffreddarsi. Ma la tua tazza è bellissima.",
+      ]
+    },
+    glass: {
+      fast: [
+        "Riflessi da campione! Peccato che quel bicchiere di carta ci metta 30 anni a decomporsi. 😅",
+        "Velocissimo! Il bicchierino invece andrà lentissimo in discarica. Ironia della vita.",
+        "Wow, reazione fulminea! La tua tazza sul bancone potrebbe fare lo stesso. 🏆",
+        "Il più veloce… e quello con più cose su cui riflettere dopo il caffè. ♻️",
+        "Grande tap! Grande bicchiere di carta. Uno dei due puoi migliorarlo domani.",
+      ],
+      mid: [
+        "Nella media. Come il numero di bicchieri di carta consumati in ufficio ogni settimana. 📊",
+        "Discreto punteggio. Una tazza domani e saresti già campione su due fronti.",
+        "Ok il tempo, meno ok il bicchierino. Ci vediamo con la tazza? ☕",
+        "A metà classifica e a metà percorso ecologico. La tazza aspetta.",
+        "Tempi accettabili. Il bicchiere di carta... l'accettiamo anche noi, ma con un sopracciglio alzato.",
+      ],
+      slow: [
+        "Lento E con il bicchiere di carta. Due ottimi motivi per migliorare domani! 😄",
+        "I riflessi si allenano. La tazza puoi portarla già domani. Inizia da lì. ☕",
+        "Decaffeinato nel bicchiere di carta? Tutto torna, davvero.",
+        "Né il tempo né il bicchiere ti hanno aiutato oggi. Domani: tazza + caffè vero. ♻️",
+        "Il bicchierino piangerà per 30 anni. Tu per fortuna puoi smettere domani.",
+      ]
+    }
+  };
+
+  function selectChoice(c) {
+    currentChoice = c;
+    document.getElementById('btn-cup').className   = 'choice-btn' + (c === 'cup'   ? ' sel-cup'   : '');
+    document.getElementById('btn-glass').className = 'choice-btn' + (c === 'glass' ? ' sel-glass' : '');
+  }
+
+  function startGame() {
+    if (!currentChoice) {
+      const row = document.querySelector('.choice-row');
+      row.classList.remove('shake'); void row.offsetWidth; row.classList.add('shake');
+      return;
+    }
+    showScreen('game');
+    beginReaction();
+  }
+
+  function beginReaction() {
+    gameState = 'waiting';
+    goColor = goColors[Math.floor(Math.random() * goColors.length)];
+    const box = document.getElementById('reaction-box');
+    box.style.background = '#1e1e1e';
+    document.getElementById('r-main').textContent = '⚫';
+    document.getElementById('r-hint').textContent = 'Preparati...';
+    document.getElementById('r-sub').textContent  = 'Tocca quando cambia colore';
+    document.getElementById('r-sub').style.opacity = '1';
+
+    const delay = 1500 + Math.random() * 3500;
+    waitTimeout = setTimeout(() => {
+      gameState = 'go';
+      box.style.background = goColor.bg;
+      document.getElementById('r-main').textContent = goColor.emoji;
+      document.getElementById('r-hint').textContent = 'ORA!';
+      document.getElementById('r-sub').style.opacity = '0';
+      startTime = performance.now();
+    }, delay);
+  }
+
+  function handleTap() {
+    if (gameState === 'waiting') { clearTimeout(waitTimeout); showTooEarly(); return; }
+    if (gameState === 'go') {
+      currentMs = Math.round(performance.now() - startTime);
+      gameState = 'result';
+      showResult(currentMs);
+    }
+  }
+
+  function showTooEarly() {
+    gameState = 'idle';
+    const o = document.createElement('div');
+    o.className = 'too-early';
+    o.innerHTML = `<span class="te-icon">⚠️</span><span class="te-text">Troppo presto!</span><span class="te-sub">Aspetta il cambio di colore</span>`;
+    o.onclick = () => { document.getElementById('reaction-box').removeChild(o); beginReaction(); };
+    document.getElementById('reaction-box').appendChild(o);
+  }
+
+  function showResult(ms) {
+    showScreen('result');
+    document.getElementById('score-display').textContent = ms;
+    const bucket = ms < 260 ? 'fast' : ms < 420 ? 'mid' : 'slow';
+    const pool = phrases[currentChoice || 'cup'][bucket];
+    document.getElementById('result-phrase').textContent = pool[Math.floor(Math.random() * pool.length)];
+    document.getElementById('name-input').value = localStorage.getItem('coffee_name') || '';
+  }
+
+  function saveScore() {
+    const name = document.getElementById('name-input').value.trim() || 'Anonimo';
+    localStorage.setItem('coffee_name', name);
+    const scores = getScores();
+    scores.push({ name, ms: currentMs, choice: currentChoice });
+    scores.sort((a,b) => a.ms - b.ms);
+    localStorage.setItem('coffee_scores', JSON.stringify(scores.slice(0,10)));
+    showLeaderboard();
+  }
+
+  function getScores() {
+    try { return JSON.parse(localStorage.getItem('coffee_scores') || '[]'); } catch { return []; }
+  }
+
+  function showLeaderboard() {
+    showScreen('leaderboard');
+    const scores = getScores();
+    const list = document.getElementById('lb-list');
+    if (!scores.length) { list.innerHTML = '<p class="lb-empty">Nessun punteggio ancora.<br>Sii il primo! ☕</p>'; return; }
+    const medals = ['🥇','🥈','🥉'];
+    list.innerHTML = scores.map((s,i) => `
+      <div class="lb-row">
+        <span class="lb-rank">${medals[i]||(i+1)}</span>
+        <span class="lb-name">${escHtml(s.name)}</span>
+        <span class="lb-ico">${s.choice==='cup'?'☕':'🗑️'}</span>
+        <span class="lb-time">${s.ms}ms</span>
+      </div>`).join('');
+  }
+
+  function clearScores() {
+    if (confirm('Cancellare la classifica?')) { localStorage.removeItem('coffee_scores'); showLeaderboard(); }
+  }
+
+  function replay()  { showScreen('game'); beginReaction(); }
+  function goHome()  { showScreen('home'); }
+
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+  }
+
+  function escHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+</script>
+</body>
+</html>
