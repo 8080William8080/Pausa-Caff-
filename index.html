@@ -15,22 +15,13 @@
   .screen { display: none; position: fixed; inset: 0; flex-direction: column; align-items: center; justify-content: center; padding: 24px 20px; gap: 0; }
   .screen.active { display: flex; }
 
-  /* HOME */
   #home { background: var(--bg); gap: 10px; }
   .logo-area { text-align: center; margin-bottom: 2px; }
   .logo-icon { font-size: 48px; display: block; margin-bottom: 6px; animation: bob 3s ease-in-out infinite; }
   @keyframes bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
   h1 { font-size: 26px; font-weight: normal; letter-spacing: -0.5px; line-height: 1.2; }
 
-  .slogan-banner {
-    width: 100%; max-width: 320px;
-    background: var(--accent);
-    border-radius: 16px;
-    padding: 16px 20px;
-    text-align: center;
-    margin: 4px 0 8px;
-    box-shadow: 0 4px 20px rgba(37,99,235,0.3);
-  }
+  .slogan-banner { width: 100%; max-width: 320px; background: var(--accent); border-radius: 16px; padding: 16px 20px; text-align: center; margin: 4px 0 8px; box-shadow: 0 4px 20px rgba(37,99,235,0.3); }
   .slogan-text { font-size: 18px; font-weight: bold; color: white; font-family: system-ui, sans-serif; line-height: 1.35; }
   .slogan-sub  { font-size: 11px; color: rgba(255,255,255,0.65); font-family: system-ui, sans-serif; margin-top: 5px; letter-spacing: 0.8px; text-transform: uppercase; }
 
@@ -51,14 +42,12 @@
   .shake { animation: shake 0.4s ease; }
   @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)} 40%{transform:translateX(8px)} 60%{transform:translateX(-5px)} 80%{transform:translateX(5px)} }
 
-  /* GAME */
   #game { padding: 0; }
   #reaction-box { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; user-select: none; transition: background 0.12s ease; background: #1e1e1e; gap: 20px; }
   .r-hint { font-size: 15px; color: rgba(255,255,255,0.55); font-family: system-ui, sans-serif; letter-spacing: 0.5px; }
   .r-main { font-size: 72px; color: white; line-height: 1; }
   .r-sub  { font-size: 14px; color: rgba(255,255,255,0.4); font-family: system-ui, sans-serif; text-align: center; padding: 0 40px; line-height: 1.5; }
 
-  /* RESULT */
   #result { background: var(--bg); gap: 14px; }
   .result-score { font-size: 78px; font-weight: normal; color: var(--accent); line-height: 1; letter-spacing: -2px; }
   .result-unit  { font-size: 17px; color: var(--muted); font-family: system-ui, sans-serif; margin-top: -4px; }
@@ -71,7 +60,6 @@
   .save-btn:disabled { opacity: 0.5; }
   .replay-sm { font-size: 14px; color: var(--accent); font-family: system-ui, sans-serif; background: none; border: none; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; padding: 4px; }
 
-  /* LEADERBOARD */
   #leaderboard { background: var(--bg); justify-content: flex-start; padding-top: 40px; overflow-y: auto; gap: 0; }
   #lb-inner { width: 100%; max-width: 360px; display: flex; flex-direction: column; gap: 12px; padding-bottom: 30px; }
   .lb-header { text-align: center; margin-bottom: 8px; }
@@ -83,11 +71,9 @@
   .lb-ico   { font-size: 18px; }
   .lb-time  { font-size: 16px; font-family: 'Georgia', serif; color: var(--accent); }
   .lb-empty { text-align: center; color: var(--muted); font-family: system-ui, sans-serif; font-size: 14px; padding: 30px 0; }
-  .lb-loading { text-align: center; color: var(--muted); font-family: system-ui, sans-serif; font-size: 14px; padding: 30px 0; }
   .lb-play  { width: 100%; padding: 16px; font-size: 16px; font-family: system-ui, sans-serif; font-weight: 600; background: var(--accent); color: white; border: none; border-radius: var(--radius); cursor: pointer; margin-top: 8px; box-shadow: 0 4px 16px rgba(37,99,235,0.3); }
   .lb-clr   { font-size: 12px; color: #bbb; font-family: system-ui, sans-serif; background: none; border: none; cursor: pointer; text-decoration: underline; text-align: center; margin-top: -4px; }
 
-  /* TOO EARLY */
   .too-early { position: fixed; inset: 0; background: rgba(220,38,38,0.92); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; animation: fi 0.1s ease; }
   @keyframes fi { from{opacity:0} to{opacity:1} }
   .te-icon { font-size: 56px; }
@@ -97,7 +83,6 @@
 </head>
 <body>
 
-<!-- HOME -->
 <div id="home" class="screen active">
   <div class="logo-area">
     <span class="logo-icon">☕</span>
@@ -122,7 +107,6 @@
   <span class="lb-link" onclick="showLeaderboard()">🏆 Classifica</span>
 </div>
 
-<!-- GAME -->
 <div id="game" class="screen">
   <div id="reaction-box" onclick="handleTap()">
     <span class="r-hint" id="r-hint">Preparati...</span>
@@ -131,7 +115,6 @@
   </div>
 </div>
 
-<!-- RESULT -->
 <div id="result" class="screen">
   <div class="result-score" id="score-display">---</div>
   <div class="result-unit">millisecondi</div>
@@ -141,7 +124,6 @@
   <button class="replay-sm" onclick="replay()">Rigioca</button>
 </div>
 
-<!-- LEADERBOARD -->
 <div id="leaderboard" class="screen">
   <div id="lb-inner">
     <div class="lb-header">
@@ -154,11 +136,12 @@
   </div>
 </div>
 
-<!-- Firebase SDK -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-  import { getDatabase, ref, push, query, orderByChild, limitToFirst, get, remove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+<!-- Firebase compat (versione classica, più stabile) -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
+<script>
+  // Firebase init
   const firebaseConfig = {
     apiKey: "AIzaSyCeLMSNaWLiIsNkoTKuOS-u_kZJN0pgKjA",
     authDomain: "pallavolo-8b6b1.firebaseapp.com",
@@ -166,35 +149,13 @@
     projectId: "pallavolo-8b6b1",
     storageBucket: "pallavolo-8b6b1.firebasestorage.app",
     messagingSenderId: "74477657469",
-    appId: "1:74477657469:web:a4ee8c6915109efbd54014",
-    measurementId: "G-E22JCLRG07"
+    appId: "1:74477657469:web:a4ee8c6915109efbd54014"
   };
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+  const scoresRef = db.ref('pausa-caffe/scores');
 
-  const app = initializeApp(firebaseConfig);
-  const db = getDatabase(app);
-  const scoresRef = ref(db, 'pausa-caffe/scores');
-
-  // Expose to global scope
-  window._fbSave = async (name, ms, choice) => {
-    await push(scoresRef, { name, ms, choice, ts: Date.now() });
-  };
-
-  window._fbLoad = async () => {
-    const q = query(scoresRef, orderByChild('ms'), limitToFirst(10));
-    const snap = await get(q);
-    const scores = [];
-    snap.forEach(child => scores.push(child.val()));
-    return scores;
-  };
-
-  window._fbClear = async () => {
-    await remove(scoresRef);
-  };
-
-  window._firebaseReady = true;
-</script>
-
-<script>
+  // Game state
   let currentChoice = null;
   let gameState = 'idle';
   let startTime = null;
@@ -286,7 +247,6 @@
     document.getElementById('r-hint').textContent = 'Preparati...';
     document.getElementById('r-sub').textContent  = 'Tocca quando cambia colore';
     document.getElementById('r-sub').style.opacity = '1';
-
     const delay = 1500 + Math.random() * 3500;
     waitTimeout = setTimeout(() => {
       gameState = 'go';
@@ -323,60 +283,58 @@
     const pool = phrases[currentChoice || 'cup'][bucket];
     document.getElementById('result-phrase').textContent = pool[Math.floor(Math.random() * pool.length)];
     document.getElementById('name-input').value = localStorage.getItem('coffee_name') || '';
-    document.getElementById('save-btn').disabled = false;
-    document.getElementById('save-btn').textContent = '💾 Salva punteggio';
+    const btn = document.getElementById('save-btn');
+    btn.disabled = false;
+    btn.textContent = '💾 Salva punteggio';
   }
 
-  async function saveScore() {
+  function saveScore() {
     const name = document.getElementById('name-input').value.trim() || 'Anonimo';
     localStorage.setItem('coffee_name', name);
-
     const btn = document.getElementById('save-btn');
     btn.disabled = true;
     btn.textContent = 'Salvataggio...';
-
-    try {
-      await window._fbSave(name, currentMs, currentChoice);
-      btn.textContent = '✅ Salvato!';
-      setTimeout(() => showLeaderboard(), 600);
-    } catch(e) {
-      btn.textContent = '⚠️ Errore, riprova';
-      btn.disabled = false;
-    }
+    scoresRef.push({ name, ms: currentMs, choice: currentChoice, ts: Date.now() })
+      .then(() => {
+        btn.textContent = '✅ Salvato!';
+        setTimeout(() => showLeaderboard(), 600);
+      })
+      .catch(() => {
+        btn.textContent = '⚠️ Errore, riprova';
+        btn.disabled = false;
+      });
   }
 
-  async function showLeaderboard() {
+  function showLeaderboard() {
     showScreen('leaderboard');
     const list = document.getElementById('lb-list');
-    list.innerHTML = '<p class="lb-loading">Caricamento... ⏳</p>';
-
-    try {
-      const scores = await window._fbLoad();
-      if (!scores.length) {
-        list.innerHTML = '<p class="lb-empty">Nessun punteggio ancora.<br>Sii il primo! ☕</p>';
-        return;
-      }
-      const medals = ['🥇','🥈','🥉'];
-      list.innerHTML = scores.map((s,i) => `
-        <div class="lb-row">
-          <span class="lb-rank">${medals[i]||(i+1)}</span>
-          <span class="lb-name">${escHtml(s.name)}</span>
-          <span class="lb-ico">${s.choice==='cup'?'☕':'🗑️'}</span>
-          <span class="lb-time">${s.ms}ms</span>
-        </div>`).join('');
-    } catch(e) {
-      list.innerHTML = '<p class="lb-empty">Errore nel caricamento. Riprova. 😕</p>';
-    }
+    list.innerHTML = '<p class="lb-empty">Caricamento... ⏳</p>';
+    scoresRef.orderByChild('ms').limitToFirst(10).get()
+      .then(snap => {
+        const scores = [];
+        snap.forEach(c => scores.push(c.val()));
+        if (!scores.length) {
+          list.innerHTML = '<p class="lb-empty">Nessun punteggio ancora.<br>Sii il primo! ☕</p>';
+          return;
+        }
+        const medals = ['🥇','🥈','🥉'];
+        list.innerHTML = scores.map((s,i) => `
+          <div class="lb-row">
+            <span class="lb-rank">${medals[i]||(i+1)}</span>
+            <span class="lb-name">${escHtml(s.name)}</span>
+            <span class="lb-ico">${s.choice==='cup'?'☕':'🗑️'}</span>
+            <span class="lb-time">${s.ms}ms</span>
+          </div>`).join('');
+      })
+      .catch(e => {
+        console.error(e);
+        list.innerHTML = '<p class="lb-empty">Errore nel caricamento. Riprova. 😕</p>';
+      });
   }
 
-  async function clearScores() {
+  function clearScores() {
     if (confirm('Cancellare tutta la classifica?')) {
-      try {
-        await window._fbClear();
-        showLeaderboard();
-      } catch(e) {
-        alert('Errore nella cancellazione.');
-      }
+      scoresRef.remove().then(() => showLeaderboard());
     }
   }
 
